@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>中国革命战争史诗 - 红色历史横向鱼骨图</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'history-red': '#8B0000',
+              'blood-red': '#4d0000',
+              'history-gold': '#FFD700',
+              'history-dark': '#1a0000',
+              'history-paper': '#fdfbf7',
+              'kmt-blue': '#000095',
+            },
+            fontFamily: {
+              serif: ['"Noto Serif SC"', 'Georgia', 'serif'],
+            },
+            animation: {
+              'shimmer': 'shimmer 3s infinite linear',
+              'pulse-gold': 'pulse-gold 2s infinite ease-in-out',
+            },
+            keyframes: {
+              shimmer: {
+                '0%': { transform: 'translateX(-100%)' },
+                '100%': { transform: 'translateX(100%)' },
+              },
+              'pulse-gold': {
+                '0%, 100%': { opacity: 0.5, transform: 'scale(1)' },
+                '50%': { opacity: 1, transform: 'scale(1.2)' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&display=swap');
+      
+      ::-webkit-scrollbar {
+        height: 10px;
+        width: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #1a0000;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #8B0000;
+        border-radius: 5px;
+        border: 2px solid #1a0000;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #FFD700;
+      }
+      body {
+        background-color: #1a0000;
+        color: #fdfbf7;
+        margin: 0;
+        overflow: hidden;
+      }
+      html, body, #root {
+        height: 100%;
+      }
+      .fishbone-spine {
+        background: linear-gradient(90deg, transparent 0%, #FFD700 15%, #FFD700 85%, transparent 100%);
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+      }
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .texture-overlay {
+        background-image: url('https://www.transparenttextures.com/patterns/black-linen.png');
+        pointer-events: none;
+        mix-blend-mode: overlay;
+      }
+      .epic-gradient {
+        background: radial-gradient(circle at center, #660000 0%, #2b0000 70%, #1a0000 100%);
+      }
+      .touch-scroll {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-y: contain;
+        touch-action: pan-y;
+      }
+    </style>
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@19.0.0",
+        "react/": "https://esm.sh/react@19.0.0/",
+        "react-dom": "https://esm.sh/react-dom@19.0.0",
+        "react-dom/": "https://esm.sh/react-dom@19.0.0/",
+        "react/jsx-runtime": "https://esm.sh/react@19.0.0/jsx-runtime"
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
