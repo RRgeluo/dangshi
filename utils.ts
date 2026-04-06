@@ -1,3 +1,4 @@
+import { getDefaultFlagDataUrl } from './defaultFlagAssets';
 import { getSideIconSlot } from './iconConfig';
 import { HistoricalEvent, IconConfig, Side } from './types';
 
@@ -70,16 +71,9 @@ const getSvgFlagMarkup = (side: Side, iconConfig?: IconConfig) => {
     `;
   }
 
-  if (side === Side.CCP) {
-    return `<image href="https://p1.img.cctvpic.com/photoworkspace/contentimg/2021/07/09/2021070916115966065.png" width="40" height="26" preserveAspectRatio="xMidYMid slice" />`;
-  }
-
-  if (side === Side.KMT) {
-    return `
-      <rect width="40" height="26" fill="#000095" />
-      <circle cx="20" cy="13" r="4.5" fill="white" />
-      <path d="M20 7 L20 19 M14 13 L26 13 M15.8 8.8 L24.2 17.2 M15.8 17.2 L24.2 8.8" stroke="white" stroke-width="1" />
-    `;
+  const defaultFlagDataUrl = getDefaultFlagDataUrl(side);
+  if (defaultFlagDataUrl) {
+    return `<image href="${escapeXml(defaultFlagDataUrl)}" width="40" height="26" preserveAspectRatio="xMidYMid slice" />`;
   }
 
   if (side === Side.JOINT) {

@@ -1,4 +1,5 @@
 import React, { useEffect, useId, useState } from 'react';
+import { getDefaultFlagDataUrl } from '../defaultFlagAssets';
 import { getSideIconSlot } from '../iconConfig';
 import { IconConfig, Side } from '../types';
 
@@ -88,6 +89,7 @@ export const FlagIcon: React.FC<FlagIconProps> = ({ side, className = '', iconCo
   const override = iconConfig?.[getSideIconSlot(side)];
   const jointGradientId = useId();
   const [imageLoadFailed, setImageLoadFailed] = useState(false);
+  const defaultFlagDataUrl = getDefaultFlagDataUrl(side);
 
   useEffect(() => {
     setImageLoadFailed(false);
@@ -113,6 +115,17 @@ export const FlagIcon: React.FC<FlagIconProps> = ({ side, className = '', iconCo
       >
         {override.value}
       </div>
+    );
+  }
+
+  if (defaultFlagDataUrl) {
+    return (
+      <img
+        src={defaultFlagDataUrl}
+        alt={`${side} icon`}
+        className={baseClasses}
+        style={{ objectFit: 'cover' }}
+      />
     );
   }
 
