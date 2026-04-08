@@ -1,15 +1,19 @@
 export enum Era {
-  ANTI_JAPAN = 'Anti-Japanese War',
-  LIBERATION = 'Liberation War',
-  KOREAN = 'Korean War'
+  OLD_DEMOCRATIC = 'OLD_DEMOCRATIC',
+  NATIONAL_REVOLUTION = 'NATIONAL_REVOLUTION',
+  LAND_REVOLUTION = 'LAND_REVOLUTION',
+  ANTI_JAPAN = 'ANTI_JAPAN',
+  LIBERATION = 'LIBERATION',
+  KOREAN = 'KOREAN',
+  SOCIALIST = 'SOCIALIST',
 }
 
 export enum Side {
   CCP = 'CCP',
   KMT = 'KMT',
-  JOINT = 'JOINT', // United Front
-  JAPAN = 'JAPAN', // For context
-  OTHER = 'OTHER'
+  JOINT = 'JOINT',
+  JAPAN = 'JAPAN',
+  OTHER = 'OTHER',
 }
 
 export interface HistoricalEvent {
@@ -18,6 +22,8 @@ export interface HistoricalEvent {
   dateStr: string;
   title: string;
   description: string;
+  people?: string;
+  meaning?: string;
   side: Side;
   era: Era;
   isMajor?: boolean;

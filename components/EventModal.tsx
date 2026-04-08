@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { DEFAULT_EVENT_DRAFT } from '../appState';
+import { ERA_LABELS, ERA_ORDER } from '../eraConfig';
 import { Era, HistoricalEventDraft, Side } from '../types';
 
 interface EventModalProps {
@@ -9,6 +10,14 @@ interface EventModalProps {
   onClose: () => void;
   onSubmit: (event: HistoricalEventDraft) => void;
 }
+
+const SIDE_LABELS: Record<Side, string> = {
+  [Side.CCP]: '共产党',
+  [Side.KMT]: '国民党',
+  [Side.JOINT]: '统一战线',
+  [Side.JAPAN]: '日本侵略者',
+  [Side.OTHER]: '其他',
+};
 
 export const EventModal: React.FC<EventModalProps> = ({
   isOpen,
@@ -43,6 +52,8 @@ export const EventModal: React.FC<EventModalProps> = ({
       dateStr: formData.dateStr.trim(),
       year: formData.year.trim(),
       description: formData.description.trim(),
+      people: formData.people?.trim() ?? '',
+      meaning: formData.meaning?.trim() ?? '',
     };
 
     if (!nextEvent.title || !nextEvent.dateStr || !nextEvent.year || !nextEvent.description) {
@@ -57,47 +68,49 @@ export const EventModal: React.FC<EventModalProps> = ({
   const submitLabel = mode === 'add' ? '保存新增史实' : '保存修改';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-      <div className="bg-[#fdfbf7] text-[#1a0505] rounded shadow-2xl w-full max-w-xl border-2 border-history-gold">
-        <div className="bg-history-red p-4 border-b border-history-gold flex justify-between items-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4">
+      <div className="w-full max-w-2xl overflow-hidden rounded-[2rem] border border-amber-500/30 bg-[#1a0606] text-[#f8f0da] shadow-[0_40px_120px_rgba(0,0,0,0.75)]">
+        <div className="flex items-center justify-between border-b border-white/8 bg-gradient-to-r from-[#2f0909] to-[#160404] px-6 py-5">
           <div>
-            <h2 className="text-history-gold font-serif text-xl font-bold">{title}</h2>
-            <p className="text-history-paper/80 text-xs mt-1">保存后会自动写入本地，下次打开仍会保留。</p>
+            <h2 className="text-xl md:text-2xl font-black font-serif text-amber-100">{title}</h2>
+            <p className="mt-1 text-xs md:text-sm tracking-[0.18em] text-amber-300/60">
+              保存后会自动写入本地，下次打开仍会保留
+            </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="text-history-gold hover:text-white font-bold text-xl"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-amber-100 hover:bg-white/10"
             aria-label="关闭"
           >
-            &times;
+            ×
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4 font-serif">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="space-y-5 p-6 font-serif">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider mb-1 text-gray-500">
+              <label className="mb-2 block text-xs font-bold tracking-[0.24em] text-amber-300/60">
                 时间标记
               </label>
               <input
                 type="text"
                 placeholder="例如 1937.7"
                 required
-                className="w-full p-2 border border-gray-300 rounded focus:border-red-800 outline-none"
+                className="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-amber-50 outline-none transition focus:border-amber-500/60"
                 value={formData.dateStr}
                 onChange={(event) => setFormData({ ...formData, dateStr: event.target.value })}
               />
             </div>
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider mb-1 text-gray-500">
+              <label className="mb-2 block text-xs font-bold tracking-[0.24em] text-amber-300/60">
                 年份
               </label>
               <input
                 type="text"
                 placeholder="例如 1937"
                 required
-                className="w-full p-2 border border-gray-300 rounded focus:border-red-800 outline-none"
+                className="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-amber-50 outline-none transition focus:border-amber-500/60"
                 value={formData.year}
                 onChange={(event) => setFormData({ ...formData, year: event.target.value })}
               />
@@ -105,88 +118,115 @@ export const EventModal: React.FC<EventModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider mb-1 text-gray-500">
+            <label className="mb-2 block text-xs font-bold tracking-[0.24em] text-amber-300/60">
               史实标题
             </label>
             <input
               type="text"
               placeholder="请输入史实标题"
               required
-              className="w-full p-2 border border-gray-300 rounded focus:border-red-800 outline-none font-bold"
+              className="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-amber-50 outline-none transition focus:border-amber-500/60"
               value={formData.title}
               onChange={(event) => setFormData({ ...formData, title: event.target.value })}
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider mb-1 text-gray-500">
-              史实说明
+            <label className="mb-2 block text-xs font-bold tracking-[0.24em] text-amber-300/60">
+              事件概述
             </label>
             <textarea
               placeholder="请输入史实说明"
               required
-              className="w-full p-2 border border-gray-300 rounded focus:border-red-800 outline-none h-28 resize-none"
+              className="h-28 w-full resize-none rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-amber-50 outline-none transition focus:border-amber-500/60"
               value={formData.description}
               onChange={(event) => setFormData({ ...formData, description: event.target.value })}
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider mb-1 text-gray-500">
+              <label className="mb-2 block text-xs font-bold tracking-[0.24em] text-amber-300/60">
                 阵营
               </label>
               <select
-                className="w-full p-2 border border-gray-300 rounded focus:border-red-800 outline-none"
+                className="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-amber-50 outline-none transition focus:border-amber-500/60"
                 value={formData.side}
                 onChange={(event) => setFormData({ ...formData, side: event.target.value as Side })}
               >
                 {Object.values(Side).map((side) => (
                   <option key={side} value={side}>
-                    {side}
+                    {SIDE_LABELS[side]}
                   </option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider mb-1 text-gray-500">
+              <label className="mb-2 block text-xs font-bold tracking-[0.24em] text-amber-300/60">
                 阶段
               </label>
               <select
-                className="w-full p-2 border border-gray-300 rounded focus:border-red-800 outline-none text-sm"
+                className="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-amber-50 outline-none transition focus:border-amber-500/60"
                 value={formData.era}
                 onChange={(event) => setFormData({ ...formData, era: event.target.value as Era })}
               >
-                {Object.values(Era).map((era) => (
+                {ERA_ORDER.map((era) => (
                   <option key={era} value={era}>
-                    {era}
+                    {ERA_LABELS[era]}
                   </option>
                 ))}
               </select>
             </div>
           </div>
 
-          <label className="flex items-center gap-2 mt-2">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div>
+              <label className="mb-2 block text-xs font-bold tracking-[0.24em] text-amber-300/60">
+                相关人物
+              </label>
+              <input
+                type="text"
+                placeholder="例如 孙中山、毛泽东"
+                className="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-amber-50 outline-none transition focus:border-amber-500/60"
+                value={formData.people ?? ''}
+                onChange={(event) => setFormData({ ...formData, people: event.target.value })}
+              />
+            </div>
+            <div>
+              <label className="mb-2 block text-xs font-bold tracking-[0.24em] text-amber-300/60">
+                历史意义
+              </label>
+              <input
+                type="text"
+                placeholder="用一句话概括"
+                className="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-amber-50 outline-none transition focus:border-amber-500/60"
+                value={formData.meaning ?? ''}
+                onChange={(event) => setFormData({ ...formData, meaning: event.target.value })}
+              />
+            </div>
+          </div>
+
+          <label className="flex items-center gap-3 rounded-xl border border-white/6 bg-white/[0.03] px-4 py-3">
             <input
               type="checkbox"
               checked={Boolean(formData.isMajor)}
               onChange={(event) => setFormData({ ...formData, isMajor: event.target.checked })}
-              className="w-4 h-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+              className="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
             />
-            <span className="text-sm font-bold text-gray-700">标记为重点史实</span>
+            <span className="text-sm text-amber-100/85">标记为重点史实</span>
           </label>
 
-          <div className="flex flex-col-reverse md:flex-row gap-3 pt-2">
+          <div className="flex flex-col-reverse gap-3 pt-2 md:flex-row">
             <button
               type="button"
               onClick={onClose}
-              className="w-full md:w-auto px-5 py-3 border border-gray-300 rounded font-bold text-gray-700 hover:bg-gray-100 transition-colors"
+              className="w-full rounded-xl border border-white/10 bg-white/5 px-5 py-3 font-bold text-amber-50/80 hover:bg-white/10 md:w-auto"
             >
               取消
             </button>
             <button
               type="submit"
-              className="w-full md:flex-1 py-3 bg-history-red text-white font-bold tracking-widest rounded shadow-lg hover:bg-red-800 transition-colors border border-history-gold"
+              className="w-full flex-1 rounded-xl border border-amber-400/30 bg-gradient-to-r from-[#8d1a12] to-[#b2331f] px-5 py-3 font-bold tracking-[0.24em] text-white shadow-[0_10px_24px_rgba(120,0,0,0.35)] hover:brightness-110"
             >
               {submitLabel}
             </button>

@@ -1,4 +1,22 @@
+param(
+  [switch]$HiddenWorker
+)
+
 $ErrorActionPreference = 'Stop'
+
+if (-not $HiddenWorker) {
+  $scriptPath = $MyInvocation.MyCommand.Path
+  $forwardArgs = @(
+    '-NoProfile',
+    '-ExecutionPolicy', 'Bypass',
+    '-WindowStyle', 'Hidden',
+    '-File', "`"$scriptPath`"",
+    '-HiddenWorker'
+  )
+
+  Start-Process -FilePath 'powershell.exe' -ArgumentList $forwardArgs -WindowStyle Hidden | Out-Null
+  exit 0
+}
 
 Add-Type -AssemblyName System.Windows.Forms
 
@@ -154,4 +172,5 @@ if (-not (Wait-ForUrl -Url $url -TimeoutSeconds 20)) {
   Fail "The local site did not start correctly. Check: $logErr"
 }
 
-Start-Process $url
+# 用 cmd start 方式强制调用系统默认浏览器，避免某些环境下 Start-Process 直接传 URL 不弹窗
+Start-Process -FilePath "cmd.exe" -ArgumentList "/c start $url" -WindowStyle Hidden

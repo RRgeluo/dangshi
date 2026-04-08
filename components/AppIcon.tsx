@@ -46,13 +46,7 @@ export const AppIcon: React.FC<AppIconProps> = ({
       );
     case 'actionExport':
       return (
-        <svg
-          className={className}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          aria-label={label}
-        >
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-label={label}>
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -110,15 +104,25 @@ export const AppIcon: React.FC<AppIconProps> = ({
       );
     case 'markerMajor':
       return (
-        <span aria-label={label} className={`${textIconClasses} ${className}`}>
-          ★
-        </span>
+        <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-label={label}>
+          <path d="M12 2.5 14.9 8l6.1.9-4.4 4.3 1 6.1L12 16.4 6.4 19.3l1-6.1L3 8.9 9.1 8z" />
+        </svg>
       );
     case 'hintScroll':
       return (
-        <span aria-label={label} className={`${textIconClasses} ${className}`}>
-          ↔
-        </span>
+        <svg
+          className={className}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-label={label}
+        >
+          <path d="M12 5v14" />
+          <path d="m6 13 6 6 6-6" />
+        </svg>
       );
     default:
       return null;

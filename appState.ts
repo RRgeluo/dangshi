@@ -21,8 +21,10 @@ export const DEFAULT_EVENT_DRAFT: HistoricalEventDraft = {
   dateStr: '',
   year: '',
   description: '',
+  people: '',
+  meaning: '',
   side: Side.CCP,
-  era: Era.ANTI_JAPAN,
+  era: Era.NATIONAL_REVOLUTION,
   isMajor: false,
 };
 
@@ -42,6 +44,37 @@ const isEra = (value: unknown): value is Era => {
   return Object.values(Era).includes(value as Era);
 };
 
+const migrateLegacyEra = (value: unknown, eventId?: string): Era | null => {
+  if (isEra(value)) {
+    if (eventId === '1919-may-fourth' && value === Era.OLD_DEMOCRATIC) {
+      return Era.NATIONAL_REVOLUTION;
+    }
+
+    if (eventId === '1921-cpc-founded' && value === Era.LAND_REVOLUTION) {
+      return Era.NATIONAL_REVOLUTION;
+    }
+
+    if (eventId === '1924-kmt-first-congress' && value === Era.LAND_REVOLUTION) {
+      return Era.NATIONAL_REVOLUTION;
+    }
+
+    return value;
+  }
+
+  switch (value) {
+    case 'Anti-Japanese War':
+      return Era.ANTI_JAPAN;
+    case 'Liberation War':
+      return Era.LIBERATION;
+    case 'Korean War':
+      return Era.KOREAN;
+    case 'National Revolution':
+      return Era.NATIONAL_REVOLUTION;
+    default:
+      return null;
+  }
+};
+
 const isSide = (value: unknown): value is Side => {
   return Object.values(Side).includes(value as Side);
 };
@@ -52,7 +85,8 @@ const sanitizeEvent = (value: unknown, index: number): HistoricalEvent | null =>
   }
 
   const candidate = value as Partial<HistoricalEvent>;
-  if (!isEra(candidate.era) || !isSide(candidate.side)) {
+  const era = migrateLegacyEra(candidate.era, candidate.id);
+  if (!era || !isSide(candidate.side)) {
     return null;
   }
 
@@ -60,6 +94,8 @@ const sanitizeEvent = (value: unknown, index: number): HistoricalEvent | null =>
   const dateStr = typeof candidate.dateStr === 'string' ? candidate.dateStr.trim() : '';
   const year = typeof candidate.year === 'string' ? candidate.year.trim() : '';
   const description = typeof candidate.description === 'string' ? candidate.description.trim() : '';
+  const people = typeof candidate.people === 'string' ? candidate.people.trim() : '';
+  const meaning = typeof candidate.meaning === 'string' ? candidate.meaning.trim() : '';
 
   if (!title || !dateStr || !year || !description) {
     return null;
@@ -71,8 +107,10 @@ const sanitizeEvent = (value: unknown, index: number): HistoricalEvent | null =>
     dateStr,
     year,
     description,
+    people,
+    meaning,
     side: candidate.side,
-    era: candidate.era,
+    era,
     isMajor: Boolean(candidate.isMajor),
   };
 };
@@ -116,7 +154,7 @@ export const loadStoredEvents = (): HistoricalEvent[] => {
     const storedEvents = parsed
       .map((event, index) => sanitizeEvent(event, index))
       .filter((event): event is HistoricalEvent => Boolean(event));
-
+    // 本地有存档时，严格按存档恢复（包含对默认事件的编辑与删除）。
     return sortEventsByDate(storedEvents);
   } catch {
     return defaultEvents;

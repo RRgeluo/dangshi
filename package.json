@@ -9,8 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource/noto-sans-sc": "^5.2.9",
+    "jspdf": "^4.2.1",
+    "playwright": "^1.42.1",
     "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "react-dom": "19.0.0",
+    "svg2pdf.js": "^2.7.0"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

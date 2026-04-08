@@ -143,7 +143,7 @@ export const IconSettingsModal: React.FC<IconSettingsModalProps> = ({
                       className="grid grid-cols-1 lg:grid-cols-[140px_1fr] gap-4 rounded border border-[#d8ccb0] bg-white/80 p-4"
                     >
                       <div className="flex flex-col items-center justify-center gap-3">
-                        <div className="w-20 h-16 rounded border border-dashed border-history-gold/40 bg-red-950/5 flex items-center justify-center overflow-hidden">
+                        <div className="w-20 h-[60px] rounded-none bg-red-950/5 flex items-center justify-center overflow-hidden">
                           {isSideIconSlot(slot) ? (
                             <FlagIcon
                               side={getSideForIconSlot(slot)}

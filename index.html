@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
+    <!-- 页面元数据 -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>中国革命战争史诗 - 红色历史横向鱼骨图</title>
+    <title>中国近代革命史诗 - 历史长卷制作工具</title>
+
+    <!-- 引入 Tailwind CSS，用于快速构建页面样式 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
+      // Tailwind 自定义主题扩展
       tailwind.config = {
         theme: {
           extend: {
@@ -21,7 +25,7 @@
               serif: ['"Noto Serif SC"', 'Georgia', 'serif'],
             },
             animation: {
-              'shimmer': 'shimmer 3s infinite linear',
+              shimmer: 'shimmer 3s infinite linear',
               'pulse-gold': 'pulse-gold 2s infinite ease-in-out',
             },
             keyframes: {
@@ -32,74 +36,95 @@
               'pulse-gold': {
                 '0%, 100%': { opacity: 0.5, transform: 'scale(1)' },
                 '50%': { opacity: 1, transform: 'scale(1.2)' },
-              }
-            }
-          }
-        }
-      }
+              },
+            },
+          },
+        },
+      };
     </script>
+
+    <!-- 全局样式及视觉效果 -->
     <style>
+      /* 引入中文衬线字体 */
       @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&display=swap');
-      
+
+      /* 自定义滚动条样式 */
       ::-webkit-scrollbar {
         height: 10px;
         width: 10px;
       }
+
       ::-webkit-scrollbar-track {
         background: #1a0000;
       }
+
       ::-webkit-scrollbar-thumb {
-        background: #8B0000;
+        background: #8b0000;
         border-radius: 5px;
         border: 2px solid #1a0000;
       }
+
       ::-webkit-scrollbar-thumb:hover {
-        background: #FFD700;
+        background: #ffd700;
       }
+
+      /* 页面基础布局，确保 root 全高度 */
+      html,
+      body,
+      #root {
+        height: 100%;
+      }
+
       body {
         background-color: #1a0000;
         color: #fdfbf7;
         margin: 0;
         overflow: hidden;
       }
-      html, body, #root {
-        height: 100%;
-      }
+
+      /* 页面中可能使用的自定义类 */
       .fishbone-spine {
-        background: linear-gradient(90deg, transparent 0%, #FFD700 15%, #FFD700 85%, transparent 100%);
+        background: linear-gradient(90deg, transparent 0%, #ffd700 15%, #ffd700 85%, transparent 100%);
         box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
       }
+
       .hide-scrollbar::-webkit-scrollbar {
         display: none;
       }
+
       .hide-scrollbar {
         -ms-overflow-style: none;
         scrollbar-width: none;
       }
+
       .texture-overlay {
         background-image: url('https://www.transparenttextures.com/patterns/black-linen.png');
         pointer-events: none;
         mix-blend-mode: overlay;
       }
+
       .epic-gradient {
         background: radial-gradient(circle at center, #660000 0%, #2b0000 70%, #1a0000 100%);
       }
+
       .touch-scroll {
         -webkit-overflow-scrolling: touch;
         overscroll-behavior-y: contain;
         touch-action: pan-y;
       }
     </style>
+
+    <!-- Es-module import map，用于浏览器加载 React 相关包 -->
     <script type="importmap">
-    {
-      "imports": {
-        "react": "https://esm.sh/react@19.0.0",
-        "react/": "https://esm.sh/react@19.0.0/",
-        "react-dom": "https://esm.sh/react-dom@19.0.0",
-        "react-dom/": "https://esm.sh/react-dom@19.0.0/",
-        "react/jsx-runtime": "https://esm.sh/react@19.0.0/jsx-runtime"
+      {
+        "imports": {
+          "react": "https://esm.sh/react@19.0.0",
+          "react/": "https://esm.sh/react@19.0.0/",
+          "react-dom": "https://esm.sh/react-dom@19.0.0",
+          "react-dom/": "https://esm.sh/react-dom@19.0.0/",
+          "react/jsx-runtime": "https://esm.sh/react@19.0.0/jsx-runtime"
+        }
       }
-    }
     </script>
   </head>
   <body>
