@@ -1,4 +1,4 @@
-param(
+﻿param(
   [switch]$HiddenWorker
 )
 
@@ -164,7 +164,7 @@ if (-not (Test-PortAvailable -Port $preferredPort)) {
 }
 
 $nodePath = (Get-Command node.exe).Source
-$nodeArguments = @($serverScript, '--port', "$preferredPort")
+$nodeArguments = "`"$serverScript`" --port $preferredPort"
 Start-Process -FilePath $nodePath -ArgumentList $nodeArguments -WorkingDirectory $projectRoot -WindowStyle Hidden -RedirectStandardOutput $logOut -RedirectStandardError $logErr | Out-Null
 
 $url = "http://127.0.0.1:$preferredPort"
@@ -172,5 +172,6 @@ if (-not (Wait-ForUrl -Url $url -TimeoutSeconds 20)) {
   Fail "The local site did not start correctly. Check: $logErr"
 }
 
-# 用 cmd start 方式强制调用系统默认浏览器，避免某些环境下 Start-Process 直接传 URL 不弹窗
-Start-Process -FilePath "cmd.exe" -ArgumentList "/c start $url" -WindowStyle Hidden
+# 使用系统默认浏览器打开本地地址。
+Start-Process -FilePath 'cmd.exe' -ArgumentList "/c start `"`" `"$url`"" -WindowStyle Hidden
+
