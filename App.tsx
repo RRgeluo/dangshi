@@ -454,16 +454,22 @@ const App: React.FC = () => {
           <div className="flex flex-col items-stretch md:items-end gap-3 w-full md:w-auto">
             <div className="flex flex-wrap gap-4 justify-end">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-6 overflow-hidden rounded-none bg-black/20 flex items-center justify-center">
+                <div className="w-8 h-6 overflow-hidden">
                   <FlagIcon side={Side.CCP} iconConfig={iconConfig} variant="flag" className="w-full h-full" />
                 </div>
                 <span className="text-xs text-history-gold/60 font-serif">共产党</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-8 h-6 overflow-hidden rounded-none bg-black/20 flex items-center justify-center">
+                <div className="w-8 h-6 overflow-hidden">
                   <FlagIcon side={Side.KMT} iconConfig={iconConfig} variant="flag" className="w-full h-full" />
                 </div>
                 <span className="text-xs text-gray-300 font-serif">国民党</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-6 overflow-hidden">
+                  <FlagIcon side={Side.JAPAN} iconConfig={iconConfig} variant="flag" className="w-full h-full" />
+                </div>
+                <span className="text-xs text-gray-300 font-serif">日本</span>
               </div>
             </div>
 

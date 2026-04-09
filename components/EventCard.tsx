@@ -69,6 +69,7 @@ export const EventCard: React.FC<EventCardProps> = ({
 }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const isVertical = layoutMode === 'vertical';
+  // OTHER 阵营按当前规则不显示任何阵营图标。
   const showFlag = event.side !== Side.OTHER;
   const yearWatermark = getYearWatermark(event);
   const hasMeaning = Boolean(event.meaning?.trim());
@@ -121,12 +122,12 @@ export const EventCard: React.FC<EventCardProps> = ({
 
           <div className="relative shrink-0">
             {showFlag && (
-              <div className="w-16 h-12 md:w-20 md:h-[60px] rounded-none bg-amber-950/60 flex items-center justify-center shadow-[inset_0_0_15px_rgba(0,0,0,0.5)] overflow-hidden">
+              <div className="w-16 h-12 md:w-20 md:h-[60px] overflow-hidden">
                 <FlagIcon
                   side={event.side}
                   iconConfig={iconConfig}
-                  variant={event.side === Side.CCP ? 'event' : 'flag'}
-                  className="w-full h-full border-0 shadow-none"
+                  variant="flag"
+                  className="w-full h-full"
                 />
               </div>
             )}
