@@ -1,5 +1,5 @@
 import React, { useEffect, useId, useState } from 'react';
-import { getDefaultFlagDataUrl } from '../defaultFlagAssets';
+import { DefaultFlagVariant, getDefaultFlagDataUrl } from '../defaultFlagAssets';
 import { getSideIconSlot } from '../iconConfig';
 import { IconConfig, Side } from '../types';
 
@@ -7,6 +7,7 @@ interface FlagIconProps {
   side: Side;
   className?: string;
   iconConfig?: IconConfig;
+  variant?: DefaultFlagVariant;
 }
 
 const getFlagBackground = (side: Side) => {
@@ -24,13 +25,13 @@ const getFlagBackground = (side: Side) => {
   }
 };
 
-const getSharedImageStyle = (side: Side): React.CSSProperties => {
+const getSharedImageStyle = (side: Side, variant: DefaultFlagVariant): React.CSSProperties => {
   const baseStyle: React.CSSProperties = {
     width: '100%',
     height: '100%',
     objectPosition: 'center',
     backgroundColor: getFlagBackground(side),
-    objectFit: 'cover',
+    objectFit: variant === 'event' && side === Side.CCP ? 'contain' : 'cover',
   };
 
   return baseStyle;
@@ -117,7 +118,12 @@ const renderDefaultFlag = (side: Side, baseClasses: string, jointGradientId: str
   );
 };
 
-export const FlagIcon: React.FC<FlagIconProps> = ({ side, className = '', iconConfig }) => {
+export const FlagIcon: React.FC<FlagIconProps> = ({
+  side,
+  className = '',
+  iconConfig,
+  variant = 'flag',
+}) => {
   if (side === Side.OTHER) {
     return null;
   }
@@ -126,14 +132,14 @@ export const FlagIcon: React.FC<FlagIconProps> = ({ side, className = '', iconCo
   const override = iconConfig?.[getSideIconSlot(side)];
   const jointGradientId = useId();
   const [imageLoadFailed, setImageLoadFailed] = useState(false);
-  const defaultFlagDataUrl = getDefaultFlagDataUrl(side);
+  const defaultFlagDataUrl = getDefaultFlagDataUrl(side, variant);
 
   useEffect(() => {
     setImageLoadFailed(false);
   }, [side, override?.mode, override?.value]);
 
   // 统一旗帜容器：居中徽标，背景填充阵营主色
-  const sharedImageStyle = getSharedImageStyle(side);
+  const sharedImageStyle = getSharedImageStyle(side, variant);
 
   if (override?.mode === 'image' && override.value && !imageLoadFailed) {
     return (

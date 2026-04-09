@@ -125,6 +125,7 @@ export const EventCard: React.FC<EventCardProps> = ({
                 <FlagIcon
                   side={event.side}
                   iconConfig={iconConfig}
+                  variant={event.side === Side.CCP ? 'event' : 'flag'}
                   className="w-full h-full border-0 shadow-none"
                 />
               </div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { jsPDF } from 'jspdf';
 import 'svg2pdf.js';
+import { EVENTS } from './data';
 import {
   loadStoredEvents,
   loadStoredIconConfig,
@@ -245,6 +246,24 @@ const App: React.FC = () => {
     );
   };
 
+  const handleResetDefaultEvents = () => {
+    const confirmed = window.confirm('恢复默认史实后，当前浏览器里保存的史实改动会被覆盖。是否继续？');
+    if (!confirmed) {
+      return;
+    }
+
+    setEvents(sortEventsByDate(EVENTS));
+    setDeletedHistory([]);
+    setSelectedFilter('ALL');
+    setHoveredNav(null);
+    setSearchKeyword('');
+    setActiveSearchIndex(0);
+
+    window.setTimeout(() => {
+      scrollToStart();
+    }, 30);
+  };
+
   const handleUndoDelete = () => {
     const snapshot = deletedHistory[deletedHistory.length - 1];
     if (!snapshot) {
@@ -436,13 +455,13 @@ const App: React.FC = () => {
             <div className="flex flex-wrap gap-4 justify-end">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-6 overflow-hidden rounded-none bg-black/20 flex items-center justify-center">
-                  <FlagIcon side={Side.CCP} iconConfig={iconConfig} className="w-full h-full" />
+                  <FlagIcon side={Side.CCP} iconConfig={iconConfig} variant="flag" className="w-full h-full" />
                 </div>
                 <span className="text-xs text-history-gold/60 font-serif">共产党</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-8 h-6 overflow-hidden rounded-none bg-black/20 flex items-center justify-center">
-                  <FlagIcon side={Side.KMT} iconConfig={iconConfig} className="w-full h-full" />
+                  <FlagIcon side={Side.KMT} iconConfig={iconConfig} variant="flag" className="w-full h-full" />
                 </div>
                 <span className="text-xs text-gray-300 font-serif">国民党</span>
               </div>
@@ -500,6 +519,15 @@ const App: React.FC = () => {
                   className="w-3.5 h-3.5"
                 />
                 <span>图标设置</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleResetDefaultEvents}
+                className="px-3 py-1 bg-black/40 hover:bg-white/5 text-history-paper border border-white/20 rounded text-xs tracking-wider transition-all duration-300 shadow-lg inline-flex items-center gap-1.5"
+                title="恢复默认史实"
+              >
+                <span>恢复默认</span>
               </button>
 
               <div ref={exportMenuRef} className="relative">
